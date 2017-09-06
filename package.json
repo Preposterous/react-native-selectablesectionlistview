@@ -1,8 +1,8 @@
 {
   "name": "react-native-selectablesectionlistview",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A Listview with a sidebar to jump to sections directly",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,13 +14,33 @@
   "license": "MIT",
   "keywords": [
     "react-component",
+    "react",
     "react-native",
-    "ios"
+    "ios",
+    "android",
+    "sectionIndexTitlesForTableView",
+    "sectionForSectionIndexTitle"
   ],
-  "devDependencies": {
-    "react-native": ">=0.3.4 <0.5.0"
-  },
   "peerDependencies": {
-    "react-native": ">=0.3.4 <0.5.0"
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-native": "^0.48.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "standard": "^10.0.3"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "parser": "babel-eslint"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "/dist/"
+    ]
+  },
+  "dependencies": {
+    "merge": "^1.2.0"
   }
 }
