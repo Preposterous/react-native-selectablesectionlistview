@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { View } from 'react-native'
 
-class CellWrapper extends Component {
+export default class CellWrapper extends Component {
   componentDidMount () {
     this.props.updateTag &&
       this.props.updateTag(this.refs.view.getNodeHandle(), this.props.sectionId)
   }
 
   render () {
-    var Cell = this.props.component
+    const Cell = this.props.component
     return (
       <View ref="view">
         <Cell {...this.props} />
@@ -34,5 +34,3 @@ CellWrapper.propTypes = {
    */
   updateTag: PropTypes.func
 }
-
-module.exports = CellWrapper
