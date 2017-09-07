@@ -1,10 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import ReactNative, {
-  StyleSheet,
-  View,
-  Text,
-  UIManager
-} from 'react-native'
+import ReactNative, { StyleSheet, View, Text, UIManager } from 'react-native'
 
 export default class SectionHeader extends Component {
   componentDidMount () {
@@ -17,17 +12,13 @@ export default class SectionHeader extends Component {
 
   render () {
     const SectionComponent = this.props.component
-    const content = SectionComponent
-      ? <SectionComponent {...this.props} />
-      : <Text>
-          {this.props.title}
-        </Text>
-
-    return (
-      <View ref="view">
-        {content}
-      </View>
+    const content = SectionComponent ? (
+      <SectionComponent {...this.props} />
+    ) : (
+      <Text>{this.props.title}</Text>
     )
+
+    return <View ref='view'>{content}</View>
   }
 }
 

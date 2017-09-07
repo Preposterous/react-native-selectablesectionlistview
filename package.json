@@ -4,13 +4,15 @@
   "description": "A Listview with a sidebar to jump to sections directly",
   "main": "src/index.js",
   "scripts": {
+    "format": "prettier-eslint \"./**/*.js\" --ignore \"./node_modules/**\" --write",
+    "format:json": "prettier-package-json --write ./package.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:johanneslumpe/react-native-selectablesectionlistview.git"
+    "url": "git@github.com:preposterous/react-native-selectablesectionlistview.git"
   },
-  "author": "Johannes Lumpe <johannes@lum.pe> (https://github.com/johanneslumpe)",
+  "author": "Peter Piekarczyk <peter@preposterous.io>",
   "license": "MIT",
   "keywords": [
     "react-component",
@@ -22,23 +24,46 @@
     "sectionForSectionIndexTitle"
   ],
   "peerDependencies": {
-    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-native": "^0.48.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "standard": "^10.0.3"
+    "eslint": "^4.4.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.2.1",
+    "eslint-plugin-standard": "^3.0.1",
+    "prettier-eslint": "^6.4.2",
+    "prettier-eslint-cli": "^4.1.1",
+    "prettier-package-json": "^1.4.0",
+    "prop-types": "^15.5.10"
   },
   "eslintConfig": {
-    "extends": "standard",
-    "parser": "babel-eslint"
-  },
-  "standard": {
     "parser": "babel-eslint",
-    "ignore": [
-      "/dist/"
-    ]
+    "extends": [
+      "standard",
+      "standard-react",
+      "plugin:flowtype/recommended"
+    ],
+    "plugins": [
+      "flowtype"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "settings": {
+      "flowtype": {
+        "onlyFilesWithFlowAnnotation": true
+      }
+    }
   },
   "dependencies": {
     "merge": "^1.2.0"

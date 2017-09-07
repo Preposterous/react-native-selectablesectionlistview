@@ -1,9 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import {
-  StyleSheet,
-  View,
-  Text
-} from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 
 const returnTrue = () => true
 
@@ -103,17 +99,17 @@ export default class SectionList extends Component {
         ? styles.text
         : styles.inactivetext
 
-      const child = SectionComponent
-        ? <SectionComponent sectionId={section} title={title} />
-        : <View style={styles.item}>
-            <Text style={[textStyle, this.props.fontStyle]}>
-              {title}
-            </Text>
-          </View>
+      const child = SectionComponent ? (
+        <SectionComponent sectionId={section} title={title} />
+      ) : (
+        <View style={styles.item}>
+          <Text style={[textStyle, this.props.fontStyle]}>{title}</Text>
+        </View>
+      )
 
       // if(index){
       return (
-        <View key={index} ref={'sectionItem' + index} pointerEvents="none">
+        <View key={index} ref={'sectionItem' + index} pointerEvents='none'>
           {child}
         </View>
       )
@@ -131,7 +127,7 @@ export default class SectionList extends Component {
 
     return (
       <View
-        ref="view"
+        ref='view'
         style={[styles.container, this.props.style]}
         onStartShouldSetResponder={returnTrue}
         onMoveShouldSetResponder={returnTrue}

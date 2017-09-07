@@ -8,9 +8,9 @@ export default class CellWrapper extends Component {
   }
 
   render () {
-    const Cell = this.props.component
+    const { component: Cell } = this.props
     return (
-      <View ref="view">
+      <View ref='view'>
         <Cell {...this.props} />
       </View>
     )

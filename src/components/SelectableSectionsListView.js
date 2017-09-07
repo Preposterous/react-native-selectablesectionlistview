@@ -3,7 +3,6 @@ import ReactNative, {
   ListView,
   StyleSheet,
   View,
-  Text,
   UIManager
 } from 'react-native'
 import merge from 'merge'
@@ -177,14 +176,16 @@ export default class SelectableSectionsListView extends Component {
       onSelect: this.props.onCellSelect
     }
 
-    return index === 0 && this.props.useDynamicHeights
-      ? <CellWrapper
-          updateTag={this.updateTagInCellMap}
-          component={CellComponent}
-          {...props}
-          {...this.props.cellProps}
-        />
-      : <CellComponent {...props} {...this.props.cellProps} />
+    return index === 0 && this.props.useDynamicHeights ? (
+      <CellWrapper
+        updateTag={this.updateTagInCellMap}
+        component={CellComponent}
+        {...props}
+        {...this.props.cellProps}
+      />
+    ) : (
+      <CellComponent {...props} {...this.props.cellProps} />
+    )
   }
 
   onScroll (e) {
@@ -221,17 +222,17 @@ export default class SelectableSectionsListView extends Component {
     if (dataIsArray) {
       dataSource = this.state.dataSource.cloneWithRows(data)
     } else {
-      sectionList = !this.props.hideSectionList
-        ? <SectionList
-            style={this.props.sectionListStyle}
-            onSectionSelect={this.scrollToSection}
-            sections={sections}
-            data={data}
-            getSectionListTitle={this.props.getSectionListTitle}
-            component={this.props.sectionListItem}
-            fontStyle={this.props.sectionListFontStyle}
-          />
-        : null
+      sectionList = !this.props.hideSectionList ? (
+        <SectionList
+          style={this.props.sectionListStyle}
+          onSectionSelect={this.scrollToSection}
+          sections={sections}
+          data={data}
+          getSectionListTitle={this.props.getSectionListTitle}
+          component={this.props.sectionListItem}
+          fontStyle={this.props.sectionListFontStyle}
+        />
+      ) : null
 
       renderSectionHeader = this.renderSectionHeader
       dataSource = this.state.dataSource.cloneWithRowsAndSections(
@@ -261,8 +262,8 @@ export default class SelectableSectionsListView extends Component {
     props.style = void 0
 
     return (
-      <View ref="view" style={[styles.container, this.props.style]}>
-        <ListView ref="listview" {...props} />
+      <View ref='view' style={[styles.container, this.props.style]}>
+        <ListView ref='listview' {...props} />
         {sectionList}
       </View>
     )
