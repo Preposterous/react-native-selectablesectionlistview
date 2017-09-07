@@ -214,11 +214,11 @@ export default class SelectableSectionsListView extends Component {
       dataSource = this.state.dataSource.cloneWithRowsAndSections(data)
     }
 
-    var renderFooter = this.props.footer
+    const renderFooter = this.props.footer
       ? this.renderFooter
       : this.props.renderFooter
 
-    var renderHeader = this.props.header
+    const renderHeader = this.props.header
       ? this.renderHeader
       : this.props.renderHeader
 
@@ -233,9 +233,9 @@ export default class SelectableSectionsListView extends Component {
           renderHeader={renderHeader}
           renderFooter={renderFooter}
           renderSectionHeader={renderSectionHeader}
-        />
-        <ListView ref="listview" {...props} />
+        >
         {sectionList}
+        </ListView>
       </View>
     )
   }
