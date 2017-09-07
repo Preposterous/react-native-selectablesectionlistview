@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { ListView, StyleSheet, View, UIManager, findNodeHandle } from 'react-native'
-
-import SectionHeader from './SectionHeader'
-import SectionList from './SectionList'
-import CellWrapper from './CellWrapper'
+import React, { Component, PropTypes } from 'react'
+import ReactNative, {
+  ListView,
+  StyleSheet,
+  UIManager
+} from 'react-native'
+import merge from 'merge'
 
 export default class SelectableSectionsListView extends Component {
   constructor (props, context) {
@@ -42,9 +42,12 @@ export default class SelectableSectionsListView extends Component {
   componentDidMount () {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(findNodeHandle(this._view), (x, y, w, h) => {
-        this.containerHeight = h
-      })
+      UIManager.measure(
+        ReactNative.findNodeHandle(this.refs.view),
+        (x, y, w, h) => {
+          this.containerHeight = h
+        }
+      )
     }, 0)
   }
 
@@ -82,44 +85,51 @@ export default class SelectableSectionsListView extends Component {
   }
 
   scrollToSection (section) {
-    var y = 0
-    var headerHeight = this.props.headerHeight || 0
+    let y = 0
+    let headerHeight = this.props.headerHeight || 0
     y += headerHeight
 
     if (!this.props.useDynamicHeights) {
-      var cellHeight = this.props.cellHeight
-      var sectionHeaderHeight = this.props.sectionHeaderHeight
-      var keys = Object.keys(this.props.data)
-      var index = keys.indexOf(section)
+      const cellHeight = this.props.cellHeight
+      let sectionHeaderHeight = this.props.sectionHeaderHeight
+      let keys = Object.keys(this.props.data)
+      if (typeof this.props.compareFunction === 'function') {
+        keys = keys.sort(this.props.compareFunction)
+      }
+      const index = keys.indexOf(section)
 
-      var numcells = 0
+      let numcells = 0
       for (var i = 0; i < index; i++) {
         numcells += this.props.data[keys[i]].length
       }
 
       sectionHeaderHeight = index * sectionHeaderHeight
       y += numcells * cellHeight + sectionHeaderHeight
-      var maxY = this.totalHeight - this.containerHeight + headerHeight
+      const maxY = this.totalHeight - this.containerHeight + headerHeight
       y = y > maxY ? maxY : y
 
-      this._listview.refs.listviewscroll.scrollTo(y, 0)
+      this.refs.listview.scrollTo({ x: 0, y, animated: true })
     } else {
-      // this breaks, if not all of the listview is pre-rendered!
-      UIManager.measure(this.cellTagMap[section], (x, y, w, h) => {
-        y = y - this.props.sectionHeaderHeight
-        this._listview.listviewscroll.scrollTo(y, 0)
-      })
+      UIManager.measureLayout(
+        this.cellTagMap[section],
+        ReactNative.findNodeHandle(this.refs.listview),
+        () => {},
+        (x, y, w, h) => {
+          y = y - this.props.sectionHeaderHeight
+          this.refs.listview.scrollTo({ x: 0, y, animated: true })
+        }
+      )
     }
 
     this.props.onScrollToSection && this.props.onScrollToSection(section)
   }
 
   renderSectionHeader (sectionData, sectionId) {
-    var updateTag = this.props.useDynamicHeights
+    const updateTag = this.props.useDynamicHeights
       ? this.updateTagInSectionMap
       : null
 
-    var title = this.props.getSectionTitle
+    const title = this.props.getSectionTitle
       ? this.props.getSectionTitle(sectionId)
       : sectionId
 
@@ -135,23 +145,23 @@ export default class SelectableSectionsListView extends Component {
   }
 
   renderFooter () {
-    var Footer = this.props.footer
+    const Footer = this.props.footer
     return <Footer />
   }
 
   renderHeader () {
-    var Header = this.props.header
+    const Header = this.props.header
     return <Header />
   }
 
   renderRow (item, sectionId, index) {
-    var CellComponent = this.props.cell
+    const CellComponent = this.props.cell
     index = parseInt(index, 10)
 
-    var isFirst = index === 0
-    var isLast = this.sectionItemCount[sectionId] - 1 === index
+    const isFirst = index === 0
+    const isLast = this.sectionItemCount[sectionId] - 1 === index
 
-    var props = {
+    const props = {
       isFirst,
       isLast,
       sectionId,
@@ -172,7 +182,7 @@ export default class SelectableSectionsListView extends Component {
   }
 
   onScroll (e) {
-    var offsetY = e.nativeEvent.contentOffset.y
+    const offsetY = e.nativeEvent.contentOffset.y
     if (this.props.updateScrollState) {
       this.setState({
         offsetY
@@ -191,29 +201,37 @@ export default class SelectableSectionsListView extends Component {
   }
 
   render () {
-    var data = this.props.data
-    var dataIsArray = Array.isArray(data)
-    var sectionList
-    var renderSectionHeader
-    var dataSource
+    const { data } = this.props
+    const dataIsArray = Array.isArray(data)
+    let sectionList
+    let renderSectionHeader
+    let dataSource
+    let sections = Object.keys(data)
+
+    if (typeof this.props.compareFunction === 'function') {
+      sections = sections.sort(this.props.compareFunction)
+    }
 
     if (dataIsArray) {
-      console.log('isAnArray', dataIsArray)
       dataSource = this.state.dataSource.cloneWithRows(data)
     } else {
-      console.log('dataisnotarray')
       sectionList = !this.props.hideSectionList
         ? <SectionList
             style={this.props.sectionListStyle}
             onSectionSelect={this.scrollToSection}
-            sections={Object.keys(data)}
+            sections={sections}
+            data={data}
             getSectionListTitle={this.props.getSectionListTitle}
             component={this.props.sectionListItem}
+            fontStyle={this.props.sectionListFontStyle}
           />
         : null
 
       renderSectionHeader = this.renderSectionHeader
-      dataSource = this.state.dataSource.cloneWithRowsAndSections(data)
+      dataSource = this.state.dataSource.cloneWithRowsAndSections(
+        data,
+        sections
+      )
     }
 
     const renderFooter = this.props.footer
@@ -224,34 +242,34 @@ export default class SelectableSectionsListView extends Component {
       ? this.renderHeader
       : this.props.renderHeader
 
-    console.log('sectionList', sectionList)
+    const props = merge({}, this.props, {
+      onScroll: this.onScroll,
+      onScrollAnimationEnd: this.onScrollAnimationEnd,
+      dataSource,
+      renderFooter,
+      renderHeader,
+      renderRow: this.renderRow,
+      renderSectionHeader
+    })
+
+    props.style = void 0
 
     return (
-      <View ref={c => this._view = c} style={[styles.container, this.props.style]}>
-        <ListView
-          ref={c => this._listview = c}
-          onScroll={this.onScroll}
-          onScrollAnimationEnd={this.onScrollAnimationEnd}
-          dataSource={dataSource}
-          renderRow={this.renderRow}
-          renderHeader={renderHeader}
-          renderFooter={renderFooter}
-          renderSectionHeader={renderSectionHeader}
-        >
+      <View ref="view" style={[styles.container, this.props.style]}>
+        <ListView ref="listview" {...props} />
         {sectionList}
-        </ListView>
       </View>
     )
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1
   }
 })
 
-var stylesheetProp = PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+const stylesheetProp = PropTypes.oneOfType([PropTypes.number, PropTypes.object])
 
 SelectableSectionsListView.propTypes = {
   /**
@@ -270,6 +288,11 @@ SelectableSectionsListView.propTypes = {
    */
   getSectionTitle: PropTypes.func,
   getSectionListTitle: PropTypes.func,
+
+  /**
+   * Function to sort sections. If not provided, the sections order will match data source
+   */
+  compareFunction: PropTypes.func,
 
   /**
    * Callback which should be called when a cell has been selected
@@ -359,5 +382,10 @@ SelectableSectionsListView.propTypes = {
   /**
    * Styles to pass to the section list container
    */
-  sectionListStyle: stylesheetProp
+  sectionListStyle: stylesheetProp,
+
+  /**
+   * Selector styles
+   */
+  sectionListFontStyle: stylesheetProp
 }

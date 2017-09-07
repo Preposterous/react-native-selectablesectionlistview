@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, PropTypes } from 'react'
 import { View, findNodeHandle } from 'react-native'
 
 export default class CellWrapper extends Component {
   componentDidMount () {
     const { updateTag, sectionId } = this.props
-    updateTag && updateTag(findNodeHandle(this._view), sectionId)
+    updateTag && updateTag(findNodeHandle(this.refs.view, sectionId))
   }
 
   render () {
     const Cell = this.props.component
     return (
-      <View ref={c => this._view = c}>
+      <View ref="view">
         <Cell {...this.props} />
       </View>
     )

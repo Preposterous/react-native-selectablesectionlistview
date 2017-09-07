@@ -1,30 +1,37 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { ListView, StyleSheet, View, UIManager, findNodeHandle } from 'react-native'
+import React, { Component, PropTypes } from 'react'
+import ReactNative, {
+  StyleSheet,
+  View,
+  Text,
+  UIManager
+} from 'react-native'
 
 export default class SectionHeader extends Component {
   componentDidMount () {
-    const { updateTag, sectionId } = this.props
-    updateTag && updateTag(findNodeHandle(this._view), sectionId)
+    this.props.updateTag &&
+      this.props.updateTag(
+        ReactNative.findNodeHandle(this.refs.view),
+        this.props.sectionId
+      )
   }
 
   render () {
-    var SectionComponent = this.props.component
-    var content = SectionComponent
+    const SectionComponent = this.props.component
+    const content = SectionComponent
       ? <SectionComponent {...this.props} />
-      : <Text style={styles.text}>
+      : <Text>
           {this.props.title}
         </Text>
 
     return (
-      <View ref={c => this._view = c} style={styles.container}>
+      <View ref="view">
         {content}
       </View>
     )
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f8f8f8',
     borderTopWidth: 1,

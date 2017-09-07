@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { ListView, StyleSheet, View, UIManager } from 'react-native'
+import React, { Component, PropTypes } from 'react'
+import {
+  StyleSheet
+} from 'react-native'
 
-const noop = () => {}
 const returnTrue = () => true
 
 export default class SectionList extends Component {
@@ -28,44 +28,108 @@ export default class SectionList extends Component {
   }
 
   detectAndScrollToSection (e) {
-    var ev = e.nativeEvent
-    var rect = { width: 1, height: 1, x: ev.locationX, y: ev.locationY }
+    const ev = e.nativeEvent.touches[0]
+    // var rect = {width:1, height:1, x: ev.locationX, y: ev.locationY};
+    // var rect = [ev.locationX, ev.locationY];
 
-    UIManager.measureViewsInRect(rect, e.target, noop, frames => {
-      if (frames.length) {
-        var index = frames[0].index
-        if (this.lastSelectedIndex !== index) {
-          this.lastSelectedIndex = index
-          this.onSectionSelect(this.props.sections[index], true)
+    // UIManager.measureViewsInRect(rect, e.target, noop, (frames) => {
+    //  if (frames.length) {
+    //    var index = frames[0].index;
+    //    if (this.lastSelectedIndex !== index) {
+    //      this.lastSelectedIndex = index;
+    //      this.onSectionSelect(this.props.sections[index], true);
+    //    }
+    //  }
+    // });
+    // UIManager.findSubviewIn(e.target, rect, viewTag => {
+    // this.onSectionSelect(view, true);
+    // })
+    const targetY = ev.pageY
+    const { y, width, height } = this.measure
+    if (!y || targetY < y) {
+      return
+    }
+    let index = Math.floor((targetY - y) / height)
+    index = Math.min(index, this.props.sections.length - 1)
+    if (
+      this.lastSelectedIndex !== index &&
+      this.props.data[this.props.sections[index]].length
+    ) {
+      this.lastSelectedIndex = index
+      this.onSectionSelect(this.props.sections[index], true)
+    }
+  }
+
+  fixSectionItemMeasure () {
+    const sectionItem = this.refs.sectionItem0
+    if (!sectionItem) {
+      return
+    }
+    this.measureTimer = setTimeout(() => {
+      sectionItem.measure((x, y, width, height, pageX, pageY) => {
+        // console.log([x, y, width, height, pageX, pageY]);
+        this.measure = {
+          y: pageY,
+          width,
+          height
         }
-      }
-    })
+      })
+    }, 0)
+  }
+
+  componentDidMount () {
+    this.fixSectionItemMeasure()
+  }
+
+  // fix bug when change data
+  componentDidUpdate () {
+    this.fixSectionItemMeasure()
+  }
+
+  componentWillUnmount () {
+    this.measureTimer && clearTimeout(this.measureTimer)
   }
 
   render () {
-    var SectionComponent = this.props.component
-    var sections = this.props.sections.map((section, index) => {
-      var title = this.props.getSectionListTitle
+    const SectionComponent = this.props.component
+    const sections = this.props.sections.map((section, index) => {
+      const title = this.props.getSectionListTitle
         ? this.props.getSectionListTitle(section)
         : section
 
-      var child = SectionComponent
+      const textStyle = this.props.data[section].length
+        ? styles.text
+        : styles.inactivetext
+
+      const child = SectionComponent
         ? <SectionComponent sectionId={section} title={title} />
         : <View style={styles.item}>
-            <Text style={styles.text}>
+            <Text style={[textStyle, this.props.fontStyle]}>
               {title}
             </Text>
           </View>
 
+      // if(index){
       return (
-        <View key={index} pointerEvents="none">
+        <View key={index} ref={'sectionItem' + index} pointerEvents="none">
           {child}
         </View>
       )
+      // }
+      // else{
+      //  return (
+      //    <View key={index} ref={'sectionItem' + index} pointerEvents="none"
+      //          onLayout={e => {console.log(e.nativeEvent.layout)}}>
+      //      {child}
+      //    </View>
+      //  );
+      //
+      // }
     })
 
     return (
       <View
+        ref="view"
         style={[styles.container, this.props.style]}
         onStartShouldSetResponder={returnTrue}
         onMoveShouldSetResponder={returnTrue}
@@ -103,19 +167,23 @@ SectionList.propTypes = {
   /**
    * A style to apply to the section list container
    */
-  style: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+  style: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+
+  /**
+   * Text font size
+   */
+  fontStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
-    right: 0,
+    right: 5,
     top: 0,
-    bottom: 0,
-    width: 15
+    bottom: 0
   },
 
   item: {
@@ -125,5 +193,10 @@ var styles = StyleSheet.create({
   text: {
     fontWeight: '700',
     color: '#008fff'
+  },
+
+  inactivetext: {
+    fontWeight: '700',
+    color: '#CCCCCC'
   }
 })
