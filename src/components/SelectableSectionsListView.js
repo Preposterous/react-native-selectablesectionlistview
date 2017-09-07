@@ -6,6 +6,10 @@ import ReactNative, {
 } from 'react-native'
 import merge from 'merge'
 
+import SectionList from './SectionList'
+import SectionHeader from './SectionHeader'
+import CellWrapper from './CellWrapper'
+
 export default class SelectableSectionsListView extends Component {
   constructor (props, context) {
     super(props, context)
