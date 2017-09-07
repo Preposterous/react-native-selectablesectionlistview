@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, View, UIManager } from 'react-native'
-import merge from 'merge'
 
 import SectionHeader from './SectionHeader'
 import SectionList from './SectionList'
@@ -223,20 +222,18 @@ export default class SelectableSectionsListView extends Component {
       ? this.renderHeader
       : this.props.renderHeader
 
-    var props = merge(this.props, {
-      onScroll: this.onScroll,
-      onScrollAnimationEnd: this.onScrollAnimationEnd,
-      dataSource,
-      renderFooter,
-      renderHeader,
-      renderRow: this.renderRow,
-      renderSectionHeader
-    })
-
-    props.style = void 0
-
     return (
       <View ref="view" style={[styles.container, this.props.style]}>
+        <ListView
+          ref="listview"
+          onScroll={this.onScroll}
+          onScrollAnimationEnd={this.onScrollAnimationEnd}
+          dataSource={dataSource}
+          renderRow={this.renderRow}
+          renderHeader={renderHeader}
+          renderFooter={renderFooter}
+          renderSectionHeader={renderSectionHeader}
+        />
         <ListView ref="listview" {...props} />
         {sectionList}
       </View>

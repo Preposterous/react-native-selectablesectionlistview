@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, View, UIManager } from 'react-native'
 
-var noop = () => {}
-var returnTrue = () => true
+const noop = () => {}
+const returnTrue = () => true
 
 export default class SectionList extends Component {
   constructor (props, context) {
