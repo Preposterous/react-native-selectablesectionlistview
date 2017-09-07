@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { ListView, StyleSheet, View, UIManager } from 'react-native'
+import { ListView, StyleSheet, View, UIManager, findNodeHandle } from 'react-native'
 
 export default class SectionHeader extends Component {
   componentDidMount () {
-    this.props.updateTag &&
-      this.props.updateTag(this._view.getNodeHandle(), this.props.sectionId)
+    const { updateTag, sectionId } = this.props
+    updateTag && updateTag(findNodeHandle(this._view), sectionId)
   }
 
   render () {

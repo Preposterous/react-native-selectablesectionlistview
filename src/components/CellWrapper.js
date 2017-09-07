@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { View } from 'react-native'
+import { View, findNodeHandle } from 'react-native'
 
 export default class CellWrapper extends Component {
   componentDidMount () {
-    this.props.updateTag &&
-      this.props.updateTag(this._view.getNodeHandle(), this.props.sectionId)
+    const { updateTag, sectionId } = this.props
+    updateTag && updateTag(findNodeHandle(this._view), sectionId)
   }
 
   render () {

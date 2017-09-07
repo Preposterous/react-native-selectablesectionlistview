@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { ListView, StyleSheet, View, UIManager } from 'react-native'
+import { ListView, StyleSheet, View, UIManager, findNodeHandle } from 'react-native'
 
 import SectionHeader from './SectionHeader'
 import SectionList from './SectionList'
@@ -42,7 +42,7 @@ export default class SelectableSectionsListView extends Component {
   componentDidMount () {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(this._view.getNodeHandle(), (x, y, w, h) => {
+      UIManager.measure(findNodeHandle(this._view), (x, y, w, h) => {
         this.containerHeight = h
       })
     }, 0)
