@@ -42,7 +42,7 @@ export default class SelectableSectionsListView extends Component {
   componentDidMount () {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(this.refs.view.getNodeHandle(), (x, y, w, h) => {
+      UIManager.measure(this._view.getNodeHandle(), (x, y, w, h) => {
         this.containerHeight = h
       })
     }, 0)
@@ -102,12 +102,12 @@ export default class SelectableSectionsListView extends Component {
       var maxY = this.totalHeight - this.containerHeight + headerHeight
       y = y > maxY ? maxY : y
 
-      this.refs.listview.refs.listviewscroll.scrollTo(y, 0)
+      this._listview.refs.listviewscroll.scrollTo(y, 0)
     } else {
       // this breaks, if not all of the listview is pre-rendered!
       UIManager.measure(this.cellTagMap[section], (x, y, w, h) => {
         y = y - this.props.sectionHeaderHeight
-        this.refs.listview.refs.listviewscroll.scrollTo(y, 0)
+        this._listview.listviewscroll.scrollTo(y, 0)
       })
     }
 
@@ -223,9 +223,9 @@ export default class SelectableSectionsListView extends Component {
       : this.props.renderHeader
 
     return (
-      <View ref="view" style={[styles.container, this.props.style]}>
+      <View ref={c => this._view = c} style={[styles.container, this.props.style]}>
         <ListView
-          ref="listview"
+          ref={c => this._listview = c}
           onScroll={this.onScroll}
           onScrollAnimationEnd={this.onScrollAnimationEnd}
           dataSource={dataSource}

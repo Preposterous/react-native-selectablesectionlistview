@@ -5,7 +5,7 @@ import { ListView, StyleSheet, View, UIManager } from 'react-native'
 export default class SectionHeader extends Component {
   componentDidMount () {
     this.props.updateTag &&
-      this.props.updateTag(this.refs.view.getNodeHandle(), this.props.sectionId)
+      this.props.updateTag(this._view.getNodeHandle(), this.props.sectionId)
   }
 
   render () {
@@ -17,7 +17,7 @@ export default class SectionHeader extends Component {
         </Text>
 
     return (
-      <View ref="view" style={styles.container}>
+      <View ref={c => this._view = c} style={styles.container}>
         {content}
       </View>
     )
