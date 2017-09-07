@@ -1,22 +1,25 @@
-# react-native-selectablesectionlistview
+# react-native-section-index-titles
 
-A Listview with a sidebar to directly jump to sections.
+A modern, fast & maintained approach to section indices in React Native
 
-Please file issues for missing features or bugs.
+![Demo](http://lum.pe/sectionlistview.gif)
 
-I apologize for the bad name.
+## Getting Started
 
-![How it looks](http://lum.pe/sectionlistview.gif)
+```
+yarn add react-native-section-index-titles
+
+or
+
+npm install --save react-native-section-index-titles
+```
 
 ## Usage
 
-The most basic way to use this component is as follows:
+```es6
+import SectionListView from 'react-native-section-index-titles'
 
-```javascript
-var SelectableSectionsListView = require('react-native-selectablesectionlistview');
-
-// inside your render function
-<SelectableSectionsListView
+<SectionListView
   data={yourData}
   cell={YourCellComponent}
   cellHeight={100}
@@ -24,9 +27,13 @@ var SelectableSectionsListView = require('react-native-selectablesectionlistview
 />
 ```
 
-You can find a more complete example below
+## Demo
 
-## Props
+[Snack for Expo](#)
+Haven't heard of Expo? Check out [https://expo.io!](https://expo.io)
+
+## Example
+Check out Snack or run this on your own machine. Clone, yarn, yarn start under ./examples folder
 
 ### SelectableSectionsListView
 
