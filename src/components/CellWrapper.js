@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { View, findNodeHandle } from 'react-native'
 
-export default class CellWrapper extends Component {
+export default class CellWrapper extends PureComponent {
   componentDidMount () {
     const { updateTag, sectionId } = this.props
     updateTag && updateTag(findNodeHandle(this.refs.view, sectionId))

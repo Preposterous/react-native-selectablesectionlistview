@@ -16,11 +16,11 @@ export default class SelectableSectionsListView extends Component {
     super(props, context)
 
     this.state = {
+      offsetY: 0,
       dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
         sectionHeaderHasChanged: (prev, next) => prev !== next
-      }),
-      offsetY: 0
+      })
     }
 
     this.renderFooter = this.renderFooter.bind(this)

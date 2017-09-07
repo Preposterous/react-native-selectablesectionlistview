@@ -1,40 +1,30 @@
-import React, { Component, PropTypes } from 'react'
-import ReactNative, { StyleSheet, View, Text, UIManager } from 'react-native'
+import React, { PureComponent, PropTypes } from 'react'
+import { View, Text, findNodeHandle } from 'react-native'
 
-export default class SectionHeader extends Component {
+export default class SectionHeader extends PureComponent {
   componentDidMount () {
-    this.props.updateTag &&
-      this.props.updateTag(
-        ReactNative.findNodeHandle(this.refs.view),
-        this.props.sectionId
-      )
+    const { updateTag, sectionId } = this.props
+    updateTag && updateTag(findNodeHandle(this.refs.view, sectionId))
   }
 
   render () {
-    const SectionComponent = this.props.component
-    const content = SectionComponent ? (
-      <SectionComponent {...this.props} />
-    ) : (
-      <Text>{this.props.title}</Text>
-    )
+    const { component: SectionComponent, title } = this.props
 
-    return <View ref='view'>{content}</View>
+    if (SectionComponent) {
+      return (
+        <View ref='view'>
+          <SectionComponent {...this.props} />
+        </View>
+      )
+    }
+
+    return (
+      <View ref='view'>
+        <Text>{title}</Text>
+      </View>
+    )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f8f8f8',
-    borderTopWidth: 1,
-    borderTopColor: '#ececec'
-  },
-  text: {
-    fontWeight: '700',
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 2
-  }
-})
 
 SectionHeader.propTypes = {
   /**
@@ -50,5 +40,11 @@ SectionHeader.propTypes = {
   /**
    * A function used to propagate the root nodes handle back to the parent
    */
-  updateTag: PropTypes.func
+  updateTag: PropTypes.func,
+
+  /**
+  * Title of Section Header
+  */
+
+  title: PropTypes.string
 }

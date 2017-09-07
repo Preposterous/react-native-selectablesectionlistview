@@ -107,22 +107,11 @@ export default class SectionList extends Component {
         </View>
       )
 
-      // if(index){
       return (
         <View key={index} ref={'sectionItem' + index} pointerEvents='none'>
           {child}
         </View>
       )
-      // }
-      // else{
-      //  return (
-      //    <View key={index} ref={'sectionItem' + index} pointerEvents="none"
-      //          onLayout={e => {console.log(e.nativeEvent.layout)}}>
-      //      {child}
-      //    </View>
-      //  );
-      //
-      // }
     })
 
     return (
