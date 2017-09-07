@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import ReactNative, {
   ListView,
   StyleSheet,
+  View,
+  Text,
   UIManager
 } from 'react-native'
 import merge from 'merge'
