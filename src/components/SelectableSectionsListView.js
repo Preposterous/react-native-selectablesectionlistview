@@ -198,8 +198,10 @@ export default class SelectableSectionsListView extends Component {
     var dataSource
 
     if (dataIsArray) {
+      console.log('isAnArray', dataIsArray)
       dataSource = this.state.dataSource.cloneWithRows(data)
     } else {
+      console.log('dataisnotarray')
       sectionList = !this.props.hideSectionList
         ? <SectionList
             style={this.props.sectionListStyle}
@@ -221,6 +223,8 @@ export default class SelectableSectionsListView extends Component {
     const renderHeader = this.props.header
       ? this.renderHeader
       : this.props.renderHeader
+
+    console.log('sectionList', sectionList)
 
     return (
       <View ref={c => this._view = c} style={[styles.container, this.props.style]}>
